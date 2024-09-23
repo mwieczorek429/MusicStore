@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Areas.Identity.Data;
+using MusicStore.Models;
 
 namespace MusicStore.Data;
 
@@ -19,4 +20,6 @@ public class MusicStoreDbContext : IdentityDbContext<MusicStoreUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
+public DbSet<MusicStore.Models.Album> Album { get; set; } = default!;
 }

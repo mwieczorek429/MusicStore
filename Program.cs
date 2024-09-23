@@ -19,7 +19,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello World!");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Albums}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 
