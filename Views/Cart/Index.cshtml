@@ -1,0 +1,20 @@
+﻿@using MusicStore.Models.ViewModels
+@model CartIndexViewModel
+
+
+<h2>Koszyk</h2>
+
+@foreach(var line in Model.Cart.Lines)
+{
+	<p>
+		<h4>@line.Album.Name</h4>
+		<h5>@line.Quantity</h5>
+		<form asp-action="RemoveFromCart" method="post">
+			<input type="hidden" name="albumId" value="@line.Album.Id" />
+			<input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+			<input type="submit" value="Usuń" />
+		</form>
+	</p>
+}
+<p>Suma: @Model.Cart.ComputeTotalValue().ToString()</p>
+<a href="@Model.ReturnUrl">Kontynuuj zakupy</a>
