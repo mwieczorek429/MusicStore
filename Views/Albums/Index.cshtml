@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MusicStore.Models.Album>
+﻿@using MusicStore.Extensions
+@model IEnumerable<MusicStore.Models.Album>
 
 @{
     ViewData["Title"] = "Index";
@@ -36,7 +37,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.ImageUrl)
             </th>
-            <th></th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -70,6 +72,11 @@
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <form id="@item.Id" asp-action="AddToCart" asp-controller="Cart" method="post">
+                    <input type="hidden" name="albumId" value="@item.Id" />
+                    <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/>
+                    <input type="submit" value="Dodaj do koszyka" />
+                </form>
             </td>
         </tr>
 }
