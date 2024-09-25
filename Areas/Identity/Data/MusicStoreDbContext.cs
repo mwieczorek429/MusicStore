@@ -21,5 +21,6 @@ public class MusicStoreDbContext : IdentityDbContext<MusicStoreUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 
-public DbSet<MusicStore.Models.Album> Album { get; set; } = default!;
+    public DbSet<MusicStore.Models.Album> Album { get; set; } = default!;
+    public DbSet<Order> Orders { get; set; } = default!;
 }
