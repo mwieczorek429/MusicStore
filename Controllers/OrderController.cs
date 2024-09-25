@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MusicStore.Models;
 
 namespace MusicStore.Controllers
@@ -44,10 +45,12 @@ namespace MusicStore.Controllers
 			return View();
 		}
 
+		[Authorize(Roles = "Administrator")]
 		public IActionResult List() =>
 			View(_orderRepository.Orders.Where(o => !o.Shipped));
 
 		[HttpPost]
+		[Authorize(Roles = "Administrator")]
 		public IActionResult MarkShipped(int orderID) 
 		{
 			var order = _orderRepository.Orders.FirstOrDefault(o => o.Id == orderID);
