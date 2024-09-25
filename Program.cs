@@ -11,6 +11,7 @@ builder.Services.AddDefaultIdentity<MusicStoreUser>(options => options.SignIn.Re
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IOrderRepository, EFOrderRepository>();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 

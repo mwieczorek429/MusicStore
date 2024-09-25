@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicStore.Data;
 
@@ -10,9 +11,11 @@ using MusicStore.Data;
 namespace MusicStore.Migrations
 {
     [DbContext(typeof(MusicStoreDbContext))]
-    partial class MusicStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240924124145_AddOrder")]
+    partial class AddOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
@@ -250,30 +253,6 @@ namespace MusicStore.Migrations
                     b.ToTable("Album");
                 });
 
-            modelBuilder.Entity("MusicStore.Models.CartLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AlbumId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("CartLine");
-                });
-
             modelBuilder.Entity("MusicStore.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -281,10 +260,8 @@ namespace MusicStore.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Shipped")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -340,26 +317,6 @@ namespace MusicStore.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MusicStore.Models.CartLine", b =>
-                {
-                    b.HasOne("MusicStore.Models.Album", "Album")
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MusicStore.Models.Order", null)
-                        .WithMany("Lines")
-                        .HasForeignKey("OrderId");
-
-                    b.Navigation("Album");
-                });
-
-            modelBuilder.Entity("MusicStore.Models.Order", b =>
-                {
-                    b.Navigation("Lines");
                 });
 #pragma warning restore 612, 618
         }

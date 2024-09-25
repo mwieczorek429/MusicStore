@@ -1,0 +1,10 @@
+﻿@using MusicStore.Models
+@model Order
+
+<form asp-action="Checkout" method="post">
+	<div>
+		<label asp-for="Name">Imię i nazwisko</label>
+		<input asp-for="Name" />
+	</div>
+	<input type="submit" value="Złóż zamówienie"/>
+</form>
