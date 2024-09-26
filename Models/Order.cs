@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using MusicStore.Enums;
 
 namespace MusicStore.Models
 {
@@ -14,5 +16,9 @@ namespace MusicStore.Models
 		[BindNever]
 		public bool Shipped { get; set; }
 		public string? Name { get; set; }
+        [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
+        public decimal TotalValue { get; set; }
+		[BindNever]
+		public PaymentStatus PaymentStatus { get; set; }
 	}
 }

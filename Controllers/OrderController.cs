@@ -15,7 +15,6 @@ namespace MusicStore.Controllers
 		}
 		public IActionResult Checkout()
 		{
-			Console.WriteLine();
 			return View(new Order());
 		}
 
@@ -30,19 +29,15 @@ namespace MusicStore.Controllers
 			if (ModelState.IsValid)
 			{
 				order.Lines = _cart.Lines.ToArray();
+				order.TotalValue = _cart.ComputeTotalValue();
+				order.PaymentStatus = Enums.PaymentStatus.Pending;
 				_orderRepository.SaveOrder(order);
-				return RedirectToAction(nameof(Completed));
+				return RedirectToAction("CreatePayment", "PayPal", new { OrderID = order.Id });
 			}
 			else
 			{
 				return View(order);
 			}
-		}
-
-		public IActionResult Completed()
-		{
-			_cart.Clear();
-			return View();
 		}
 
 		[Authorize(Roles = "Administrator")]

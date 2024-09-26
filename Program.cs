@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Areas.Identity.Data;
+using MusicStore.Configurations;
 using MusicStore.Data;
 using MusicStore.Extensions;
 using MusicStore.Models;
@@ -24,6 +25,8 @@ builder.Services.AddTransient<IOrderRepository, EFOrderRepository>();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddRazorPages();
+builder.Services.Configure<PayPalSettings>(builder.Configuration.GetSection("PayPal"));
+builder.Services.AddTransient<PayPalConfiguration>();
 
 var app = builder.Build();
 
