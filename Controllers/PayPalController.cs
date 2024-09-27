@@ -34,21 +34,20 @@ namespace MusicStore.Controllers
 
             var apiContext = _payPalConfiguration.GetAPIContext();
 
-            // Utwórz szczegóły płatności
             var payment = new Payment()
             {
-                intent = "sale", // Typ płatności (np. sale)
+                intent = "sale", 
                 payer = new Payer() { payment_method = "paypal" },
                 transactions = new List<Transaction>()
             {
                 new Transaction()
                 {
                     description = "Zakup testowy",
-                    invoice_number = OrderID.ToString(), // numer faktury
+                    invoice_number = OrderID.ToString(), 
                     amount = new Amount()
                     {
                         currency = "PLN",
-                        total = order.TotalValue.ToString(), // całkowita kwota płatności
+                        total = order.TotalValue.ToString(), 
                     }
                 }
             },
@@ -59,10 +58,8 @@ namespace MusicStore.Controllers
                 }
             };
 
-            // Utwórz płatność w PayPal
             var createdPayment = payment.Create(apiContext);
 
-            // Znajdź link do zatwierdzenia płatności
             var approvalUrl = createdPayment.links.GetEnumerator();
             while (approvalUrl.MoveNext())
             {
@@ -76,7 +73,6 @@ namespace MusicStore.Controllers
             return RedirectToAction("Error");
         }
 
-        // Po pomyślnym zakończeniu płatności
         public IActionResult PaymentSuccess(string paymentId, string token, string PayerID)
         {
             var apiContext = _payPalConfiguration.GetAPIContext();
@@ -84,7 +80,6 @@ namespace MusicStore.Controllers
             var paymentExecution = new PaymentExecution() { payer_id = PayerID };
             var payment = new Payment() { id = paymentId };
 
-            // Zatwierdź płatność
             var executedPayment = payment.Execute(apiContext, paymentExecution);
 
             if (executedPayment.state.ToLower() != "approved")
@@ -95,13 +90,11 @@ namespace MusicStore.Controllers
             return View("Success");
         }
 
-        // Gdy płatność zostanie anulowana
         public IActionResult PaymentCancel()
         {
             return View("Cancel");
         }
 
-        // Obsługa błędu
         public IActionResult Error()
         {
             return View("Error");

@@ -413,3 +413,7 @@ FodyWeavers.xsd
 # Appsettings
 appsettings.json
 appsettings.*.json
+/wwwroot/images/product
+/MusicStore.db-shm
+/MusicStore.db-wal
+/MusicStore.csproj

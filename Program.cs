@@ -5,6 +5,7 @@ using MusicStore.Configurations;
 using MusicStore.Data;
 using MusicStore.Extensions;
 using MusicStore.Models;
+using MusicStore.Services;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MusicStoreDbContextConnection") ?? throw new InvalidOperationException("Connection string 'MusicStoreDbContextConnection' not found.");
 
@@ -19,6 +20,8 @@ builder.Services.AddIdentity<MusicStoreUser, IdentityRole>(options =>
 .AddDefaultUI();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IAlbumRepository, EFAlbumRepository>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IOrderRepository, EFOrderRepository>();

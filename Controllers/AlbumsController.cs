@@ -2,27 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Data;
 using MusicStore.Models;
+using MusicStore.Services;
 
 namespace MusicStore.Controllers
 {
     public class AlbumsController : Controller
     {
-        private readonly MusicStoreDbContext _context;
+        private readonly IAlbumRepository _albumRepository;
+        private readonly IFileService _fileService;
 
-        public AlbumsController(MusicStoreDbContext context)
+        public AlbumsController(IAlbumRepository context, IFileService fileService)
         {
-            _context = context;
+            _albumRepository = context;
+            _fileService = fileService;
         }
 
         // GET: Albums
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Album.ToListAsync());
+            return View(await _albumRepository.Albums.ToListAsync());
         }
 
         // GET: Albums/Details/5
@@ -33,8 +37,8 @@ namespace MusicStore.Controllers
                 return NotFound();
             }
 
-            var album = await _context.Album
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var album = await _albumRepository.Albums
+                .FirstOrDefaultAsync(a => a.Id == id);
             if (album == null)
             {
                 return NotFound();
@@ -54,12 +58,25 @@ namespace MusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Author,Price,Genre,ReleaseYear,Duration,Description,ImageUrl")] Album album)
+        public async Task<IActionResult> Create([Bind("Id,Name,Author,Price,Genre,ReleaseYear,Duration,Description,ImageUrl")] Album album, IFormFile? image)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(album);
-                await _context.SaveChangesAsync();
+                if(image != null) 
+                {
+                    try
+                    {
+                        string imageUrl = await _fileService.UploadImageAsync(image);
+                        album.ImageUrl = imageUrl;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        ModelState.AddModelError("ImageUrl", ex.Message);
+                        return View(album);
+                    }
+                }
+                await _albumRepository.AddAlbumAsync(album);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(album);
@@ -73,7 +90,9 @@ namespace MusicStore.Controllers
                 return NotFound();
             }
 
-            var album = await _context.Album.FindAsync(id);
+            var album = await _albumRepository.Albums
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (album == null)
             {
                 return NotFound();
@@ -86,7 +105,7 @@ namespace MusicStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Author,Price,Genre,ReleaseYear,Duration,Description,ImageUrl")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Author,Price,Genre,ReleaseYear,Duration,Description,ImageUrl")] Album album, IFormFile? image)
         {
             if (id != album.Id)
             {
@@ -97,8 +116,20 @@ namespace MusicStore.Controllers
             {
                 try
                 {
-                    _context.Update(album);
-                    await _context.SaveChangesAsync();
+                    if (image != null)
+                    {
+                        try
+                        {
+                            string imageUrl = await _fileService.UploadImageAsync(image);
+                            album.ImageUrl = imageUrl;
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            ModelState.AddModelError("ImageUrl", ex.Message);
+                            return View(album);
+                        }
+                    }
+                    await _albumRepository.UpdateAlbumAsync(album);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +155,7 @@ namespace MusicStore.Controllers
                 return NotFound();
             }
 
-            var album = await _context.Album
+            var album = await _albumRepository.Albums
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (album == null)
             {
@@ -139,19 +170,14 @@ namespace MusicStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var album = await _context.Album.FindAsync(id);
-            if (album != null)
-            {
-                _context.Album.Remove(album);
-            }
+            await _albumRepository.DeleteAlbumAsync(id);
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AlbumExists(int id)
         {
-            return _context.Album.Any(e => e.Id == id);
+            return _albumRepository.Albums.Any(a => a.Id == id);
         }
     }
 }
