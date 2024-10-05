@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<!--
 <h1>Details</h1>
 
 <div>
@@ -63,4 +63,24 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
+-->
+<div class="pt-12 grid grid-cols-2 font-roboto text-slate-900">
+    <div class="block">
+        <div class="transition duration-500 hover:scale-105 block bg-gray-800" style="width: 100%; height: 500px;">
+        </div>
+    </div>
+    <div class="pl-12 block">
+        <h2 class="text-5xl font-medium">Name</h2>
+        <h5 class="text-xl text-slate-700">Author</h5>
+        <h1 class="text-5xl mt-5">49.99 PLN</h1>
+        <input type="submit" class="font-normal cursor-pointer mt-5 bg-orange-500 border-b-4 border-amber-700 text-white w-96 h-12 rounded-md" value="Add to cart" />
+        <h4 class="font-medium mt-3 text-xl">Detailed information</h4>
+        <h6 class="text-gray-600">Genre:</h6>
+        <h6 class="text-gray-600">Release Year: 10.10.2020</h6>
+        <h5 class="font-medium text-2xl mt-5 mb-1 text-slate-800">Product description</h5>
+        <p class="text-base text-slate-700">
+            Elden Ring to esencja przygody, gdzie każdy moment przynosi coś nowego i zaskakującego. Niezliczone ścieżki, którymi można podążać, sprawiają, że każda rozgrywka jest inna, pełna nieprzewidywalnych spotkań i odkryć. To świat, który nieustannie zachęca do eksploracji, nagradzając odwagę i ciekawość gracza. Każdy nowy boss, każda tajemnica ukryta za zakrętem stawia wyzwanie, ale daje też nieporównywalną satysfakcję z pokonania przeszkód. W Elden Ring każde zwycięstwo smakuje wyjątkowo.
+        </p>
+    </div>
 </div>

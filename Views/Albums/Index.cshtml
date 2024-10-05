@@ -5,14 +5,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
 @if (User.IsInRole("Administrator"))
 {
     <p> 
         <a asp-action="Create">Create New</a>
     </p>
 }
+<!--
 <table class="table">
     <thead>
         <tr>
@@ -90,3 +89,51 @@
 }
     </tbody>
 </table>
+-->
+<div class="container">
+    <div class="row">
+        @{
+            int count = 0;
+            int totalItems = Model.Count();
+        }
+
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div>
+                    <div class="container mt-3">
+                        <a asp-action="Details" asp-route-id="@item.Id">
+                        @if (item.ImageUrl != null)
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" class="img-fluid">
+                        }
+                        else
+                        {                           
+                            <img src="https://via.placeholder.com/300" alt="Obrazek produktu" class="img-fluid">
+                        }
+                        </a>
+                        <h1 class="fs-6 mb-0">@item.Name</h1>
+                        <p class="text-muted m-0 fs-6">@item.Author</p>
+                        <p class="text-muted fs-6">@item.Price PLN</p>
+                    </div>
+                </div>
+            </div>
+            {
+                count++;
+                if (count % 4 == 0 && count != totalItems)
+                {
+                    @Html.Raw("</div><div class=\"row\">")
+                }
+            }
+        }
+
+        @if (totalItems % 4 != 0)
+        {
+            int remainingCols = 4 - (totalItems % 4);
+            for (int i = 0; i < remainingCols; i++)
+            {
+                <div class="col-md-3 mb-4"></div>
+            }
+        }
+    </div>
+</div>
